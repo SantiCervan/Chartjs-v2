@@ -1,4 +1,5 @@
 import React from 'react';
+import { SalesChart } from './components/SalesChart';
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
         <h1 className="font-bold text-3xl text-center">ChartJs</h1>
         <div className="border-b-2 py-16">
           <h3 className="font-bold text-xl">Sales chart</h3>
+          <SalesChart />
         </div>
       </div>
     </div>
