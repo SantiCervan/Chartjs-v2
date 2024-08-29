@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { useSalesData } from '../hooks/useSalesData';
 
 ChartJS.register(
   CategoryScale,
@@ -48,50 +49,22 @@ const months = [
   'Diciembre',
 ];
 
-function GenerateRandomSales() {
-  return months.map(() => Math.floor(Math.random() * 10000) + 1000);
-}
-
 export function SalesChart() {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
-
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth);
   const [day, setDay] = useState(new Date().getDate());
   const [minSales, setMinSales] = useState(0);
   const [maxSales, setMaxSales] = useState(10000);
-  const [salesData, setSalesData] = useState({
-    labels: months,
-    datasets: [
-      {
-        label: `Ventas ${currentYear}`,
-        data: GenerateRandomSales(),
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-    ],
-  });
 
-  useEffect(() => {
-    updateSales();
-  }, [year, month, day, minSales, maxSales]);
-
-  function updateSales() {
-    const newData = GenerateRandomSales().map((sale) =>
-      sale >= minSales && sale <= maxSales ? sale : 0
-    );
-
-    setSalesData({
-      labels: months,
-      datasets: [
-        {
-          label: `Ventas ${year}`,
-          data: newData,
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        },
-      ],
-    });
-  }
+  const { salesData, updateSales } = useSalesData(
+    year,
+    month,
+    day,
+    minSales,
+    maxSales
+  );
 
   function clearFilters() {
     setYear(currentYear);
