@@ -1,37 +1,46 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+declare namespace Cypress {
+  interface Chainable<Subject = any> {
+    selectYear(year: number): Chainable<void>;
+    selectMonth(monthIndex: number): Chainable<void>;
+    selectDay(day: number): Chainable<void>;
+    setMinSales(value: number): Chainable<void>;
+    setMaxSales(value: number): Chainable<void>;
+    clearFilters(): Chainable<void>;
+    generateNewSales(): Chainable<void>;
+    checkChartVisibility(): Chainable<void>;
+  }
+}
+
+Cypress.Commands.add('selectYear', (year: number) => {
+  cy.get('input[type="number"]').first().clear().type(year.toString());
+});
+
+Cypress.Commands.add('selectMonth', (monthIndex: number) => {
+  cy.get('select').select(monthIndex.toString());
+});
+
+Cypress.Commands.add('selectDay', (day: number) => {
+  cy.get('input[type="number"]').eq(1).clear().type(day.toString());
+});
+
+Cypress.Commands.add('setMinSales', (value: number) => {
+  cy.get('input[type="number"]').eq(2).clear().type(value.toString());
+});
+
+Cypress.Commands.add('setMaxSales', (value: number) => {
+  cy.get('input[type="number"]').eq(3).clear().type(value.toString());
+});
+
+Cypress.Commands.add('clearFilters', () => {
+  cy.contains('Limpiar Filtros').click();
+});
+
+Cypress.Commands.add('generateNewSales', () => {
+  cy.contains('Generar Nuevas Ventas').click();
+});
+
+Cypress.Commands.add('checkChartVisibility', () => {
+  cy.get('canvas').should('be.visible');
+});

@@ -52,26 +52,26 @@ const months = [
 export function SalesChart() {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
-  const [year, setYear] = useState(currentYear);
+  const [year, setYear] = useState(currentYear.toString());
   const [month, setMonth] = useState(currentMonth);
-  const [day, setDay] = useState(new Date().getDate());
-  const [minSales, setMinSales] = useState(0);
-  const [maxSales, setMaxSales] = useState(10000);
+  const [day, setDay] = useState(new Date().getDate().toString());
+  const [minSales, setMinSales] = useState('0');
+  const [maxSales, setMaxSales] = useState('10000');
 
   const { salesData, updateSales } = useSalesData(
-    year,
+    parseInt(year) || currentYear,
     month,
-    day,
-    minSales,
-    maxSales
+    parseInt(day) || 1,
+    parseInt(minSales) || 0,
+    parseInt(maxSales) || 10000
   );
 
   function clearFilters() {
-    setYear(currentYear);
+    setYear(currentYear.toString());
     setMonth(currentMonth);
-    setDay(new Date().getDate());
-    setMinSales(0);
-    setMaxSales(10000);
+    setDay(new Date().getDate().toString());
+    setMinSales('0');
+    setMaxSales('10000');
   }
 
   return (
@@ -82,7 +82,10 @@ export function SalesChart() {
           <input
             type="number"
             value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
+            onChange={(e) => setYear(e.target.value)}
+            onBlur={(e) => {
+              if (!e.target.value) setYear(currentYear.toString());
+            }}
             className="border p-2 rounded"
             max={currentYear}
           />
@@ -96,7 +99,7 @@ export function SalesChart() {
             className="border p-2 rounded"
           >
             {months
-              .slice(0, year === currentYear ? currentMonth + 1 : 12)
+              .slice(0, parseInt(year) === currentYear ? currentMonth + 1 : 12)
               .map((m, index) => (
                 <option key={m} value={index}>
                   {m}
@@ -109,10 +112,13 @@ export function SalesChart() {
           <input
             type="number"
             value={day}
-            onChange={(e) => setDay(Number(e.target.value))}
+            onChange={(e) => setDay(e.target.value)}
+            onBlur={(e) => {
+              if (!e.target.value) setDay('1');
+            }}
             min={1}
             max={
-              year === currentYear && month === currentMonth
+              parseInt(year) === currentYear && month === currentMonth
                 ? new Date().getDate()
                 : 31
             }
@@ -126,7 +132,10 @@ export function SalesChart() {
           <input
             type="number"
             value={minSales}
-            onChange={(e) => setMinSales(Number(e.target.value))}
+            onChange={(e) => setMinSales(e.target.value)}
+            onBlur={(e) => {
+              if (!e.target.value) setMinSales('0');
+            }}
             className="border p-2 rounded"
           />
         </div>
@@ -137,7 +146,10 @@ export function SalesChart() {
           <input
             type="number"
             value={maxSales}
-            onChange={(e) => setMaxSales(Number(e.target.value))}
+            onChange={(e) => setMaxSales(e.target.value)}
+            onBlur={(e) => {
+              if (!e.target.value) setMaxSales('10000');
+            }}
             className="border p-2 rounded"
           />
         </div>
